@@ -62,19 +62,19 @@ data FSTree = FST Directory [FSTree] [File]
 
 -- | Returns the list of files at current directory
 fstFiles :: FSTree -> [File]
-fstFiles = undefined
+fstFiles (FST dir fst files) = files
 
 -- | Returns the list of sub file system trees at current directory
 subdirs :: FSTree -> [FSTree]
-subdirs = undefined
+subdirs (FST dir fst files) = fst
 
 -- | Returns the root directory
 topDir :: FSTree -> Directory
-topDir = undefined
+topDir (FST dir fst files) = dir
 
 -- | Initial File System Tree
 initFSTree :: FSTree
-initFSTree = undefined
+initFSTree (FST dir fst files) = FST "/" [] []
 
 {- | FSPath indicates how to navigate a File System Tree.
      Stop means that you are in the right place.
