@@ -216,7 +216,6 @@ cdupFS (fst, path)
 
 -- | Prints the path of the current position.
 pwdFS :: FileSystem -> String
-pwdFS (fst, path) = undefined
 pwdFS (_, Stop) = ""
 pwdFS (fst, Down d p) = topDir fst ++ d ++ pwdFS (fst, p)
 
@@ -225,7 +224,7 @@ pwdFS (fst, Down d p) = topDir fst ++ d ++ pwdFS (fst, p)
 --   the file system. Otherwise returns Nothing.
 
 findFS :: Name -> FileSystem -> Maybe FSPath
-findFS name (fst, path)
-    | fileExists (fst, path) || dirExists (fst, path) = Just path
-    | 
-    | otherwise = Nothing
+findFS _ (_, Stop) = Nothing
+findFS name (fst, (Down d path))
+    | fileExists name (fst, (Down d path)) || dirExists name (fst, (Down d path)) = Just path
+    | otherwise = Just (Down d (fromJust (findFS name (fst, path))))
