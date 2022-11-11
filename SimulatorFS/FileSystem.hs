@@ -100,13 +100,28 @@ data FSPath = Stop | Down Directory FSPath
    but      `Down "SimulatorFS" (Down "something" Stop)` is not
 -}
 validPath :: FSTree -> FSPath -> Bool
-validPath = undefined
+validPath (FST _ [] _) Stop = False
+validPath _ Stop = True
+validPath (FST _ [] _) (Down _ _) = False
+validPath (FST dir (x:xs) _) (Down directory path) = dir == directory && (validPath x path || validPath (FST (topDir x) xs []) path)
 
+{- | Given a FSTree and a FSPath returns the FSTree
+     corresponding to the path.
+     Example:
+     In the file system
+
+   "/"
+   └── SimulatorFS
+       ├── Examples.hs
+       ├── FileSystem.hs
+       ├── FSInterpreter.hs
+       └── README
+-}
 -- | Given a FSTree fs and a FSPath path, returns the FSTree which is the
 --   result of navigate fs with path.
 --   PRE: validPath fst p
 goPath :: FSTree -> FSPath -> FSTree
-goPath = undefined
+goPath (FST dir fst files) (Down Directory FSPath) = 
 
 -- | Given a directory and a path, returns
 --   the path which is the result of adding a
