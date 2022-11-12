@@ -217,6 +217,7 @@ balance [x] = Leaf x
 balance xs = Node (balance (take (length xs `div` 2) xs)) (balance (drop (length xs `div` 2) xs))
 
 -- 4
+infLeftTree = Node (goLeft infLeftTree) (Leaf 1)
 
 goLeft :: Tree -> Tree
 goLeft (Leaf _) = error "leaf"
@@ -224,4 +225,12 @@ goLeft (Node t _) = t
 
 flatten :: Tree -> [Int]
 flatten (Leaf i)    = [i]
-flatten (Node t t’) = flatten t’ ++ flatten t
+flatten (Node t d) = flatten d ++ flatten t
+
+-- is it even possible? Yes, it is. Due to Haskell Lazy Evaluation, expressions are not evaluated when they are bound 
+-- to variables but their evaluation is deferred until their results are needed by other computations. In consequence, 
+-- arguments are not evaluated before they are passed to a function, but only when their values are actually used.
+
+-- If yes, why does it work head (flatten infLeftTree)? Thats because the head function just takes the first element of the list,
+-- ignoring the rest of the elements. So, the evaluation of the rest of the list is not needed. Therefore, those infinite elements
+-- are not evaluated.

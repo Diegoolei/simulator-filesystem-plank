@@ -100,7 +100,6 @@ data FSPath = Stop | Down Directory FSPath
    but      `Down "SimulatorFS" (Down "something" Stop)` is not
 -}
 validPath :: FSTree -> FSPath -> Bool
-validPath (FST _ [] _) Stop = False
 validPath _ Stop = True
 validPath (FST _ [] _) (Down _ _) = False
 validPath (FST _ (x:xs) _) (Down directory path) = (topDir x == directory && validPath x path) || validPath (FST "" xs []) path
@@ -207,7 +206,8 @@ addDFS dir (fst, path)
 -- | Changes current position to the upper directory. If current
 --   directory is the root, it returns Nothing.
 isRoot :: FileSystem -> Bool
-isRoot (_, Stop) = True
+isRoot (_, path) = isNextStop path
+                   
 
 cdupFS :: FileSystem -> Maybe FileSystem
 cdupFS (fst, path)     
