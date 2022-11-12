@@ -224,7 +224,7 @@ pwdFS (fst, Down d p) = topDir fst ++ d ++ pwdFS (fst, p)
 --   the file system. Otherwise returns Nothing.
 
 findFS :: Name -> FileSystem -> Maybe FSPath
-findFS _ (_, Stop) = Nothing
-findFS name (fst, (Down d path))
-    | fileExists name (fst, (Down d path)) || dirExists name (fst, (Down d path)) = Just path
-    | otherwise = Just (Down d (fromJust (findFS name (fst, path))))
+findFS _ (_, Stop) = Just Stop
+findFS name ((FST dir (x:xs) files), (Down d path))
+    | fileExists name ((FST dir (x:xs) files), (Down d path)) || dirExists name ((FST dir (x:xs) files), (Down d path)) = Just path
+    | otherwise = Just (fromJust (findFS name (x, path)))
