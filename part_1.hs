@@ -165,8 +165,9 @@ snd' :: (a,b) -> b
 snd' (_,y) =  y
 -- There exists another different definition? No
 
-plank :: a -> b
-plank x = x == plank
+errorFunc :: a -> b
+errorFunc x = error "error"
+
 -- There exists another different definition? yes
 
 -- f :: (a,b) -> c non definable
@@ -181,8 +182,8 @@ list_funct :: (a -> b) -> [a] -> [b]
 list_funct f x = map f x
 -- There exists another different definition? no
 
-_(-.) :: (a -> b) -> (b -> c) -> a -> c
-_(-.) = (<&>)
+-- (-.)' :: (a -> b) -> (b -> c) -> a -> c
+-- (-.)' = (<&>)
 
 -- There exists another different definition? no
 
@@ -199,3 +200,28 @@ optimizeList (x:xs) = (1 + length (takeWhile (==x) xs), x) : optimizeList (dropW
 -- 3)
 
 data Tree = Leaf Int | Node Tree Tree
+
+-- 3) a)
+height :: Tree -> Int
+height (Leaf _) = 0
+height (Node l r) = 1 + max (height l) (height r)
+
+balanced :: Tree -> Bool
+balanced (Leaf _) = True
+balanced (Node l r) = abs (height l - height r) <= 1 && balanced l && balanced r
+
+--3) b)
+
+balance :: [Int] -> Tree
+balance [x] = Leaf x
+balance xs = Node (balance (take (length xs `div` 2) xs)) (balance (drop (length xs `div` 2) xs))
+
+-- 4
+
+goLeft :: Tree -> Tree
+goLeft (Leaf _) = error "leaf"
+goLeft (Node t _) = t
+
+flatten :: Tree -> [Int]
+flatten (Leaf i)    = [i]
+flatten (Node t t’) = flatten t’ ++ flatten t
