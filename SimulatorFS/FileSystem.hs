@@ -225,6 +225,7 @@ pwdFS (fst, Down d p) = topDir fst ++ d ++ pwdFS (fst, p)
 
 findFS :: Name -> FileSystem -> Maybe FSPath
 findFS _ (_, Stop) = Just Stop
+findFS _ (FST _ [] [], _) = Nothing
 findFS name ((FST dir (x:xs) files), (Down d path))
     | fileExists name ((FST dir (x:xs) files), (Down d path)) || dirExists name ((FST dir (x:xs) files), (Down d path)) = Just path
     | otherwise = Just (fromJust (findFS name (x, path)))
